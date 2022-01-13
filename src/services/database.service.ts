@@ -1,28 +1,31 @@
 import * as mongoDB from 'mongodb';
-import Game from '../models/games.model';
+import User from '../models/user.model';
+import Service from '../models/service.model';
 
-// export const collections: { games?: mongoDB.Collection<Game> } = {};
-
-export const connectToDatabase = async (): Promise<
-  mongoDB.Collection<Game>
-> => {
+export const connectToDatabase = async (): Promise<{
+  mongoClient: mongoDB.MongoClient;
+  usersCollection: mongoDB.Collection<User>;
+  servicesCollection: mongoDB.Collection<Service>;
+}> => {
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
-    process.env.DB_CONN_STRING || process.exit(1)
+    process.env.MONGO_URI || process.exit(1)
   );
 
   await client.connect();
 
-  const db: mongoDB.Db = client.db(process.env.DB_NAME);
+  const db: mongoDB.Db = client.db(process.env.MONGO_DB_NAME);
 
-  const gamesCollection: mongoDB.Collection<Game> = db.collection(
-    process.env.GAMES_COLLECTION_NAME || process.exit(1)
+  const usersCollection: mongoDB.Collection<User> = db.collection(
+    process.env.USERS_COLLECTION_NAME || process.exit(1)
   );
 
-  // collections.games = gamesCollection;
+  const servicesCollection: mongoDB.Collection<Service> = db.collection(
+    process.env.SERVICES_COLLECTION_NAME || process.exit(1)
+  );
 
   console.log(
-    `Successfully connected to database: ${db.databaseName} and collection: ${gamesCollection.collectionName}`
+    `Successfully connected to database: ${db.databaseName} and collection: ${usersCollection.collectionName}`
   );
 
-  return gamesCollection;
+  return { mongoClient: client, usersCollection, servicesCollection };
 };

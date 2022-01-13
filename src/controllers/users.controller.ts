@@ -1,7 +1,8 @@
 import Koa from 'koa';
 import Router from '@koa/router';
 import { MyState } from '../main';
-import Game from '../models/games.model';
+import User from '../models/user.model';
+import Service from '../models/service.model';
 
 export const getGame = async (
   ctx: Koa.ParameterizedContext<
@@ -12,13 +13,18 @@ export const getGame = async (
   next: Koa.Next
 ) => {
   try {
-    const newGame: Game = {
-      name: 'TacoBell Shooter',
-      price: 1000,
-      category: 'FPS',
+    const newUser: User = {
+      name: 'John Doe',
+      email: 'test@gmail.com',
+      serviceDate: '1',
+      serviceId: '1',
+      seats: 0,
+      updaterPin: 0,
     };
 
-    const result = await ctx.state.gameCollection.insertOne(newGame);
+    const result = await ctx.state.mongoState.usersCollection.insertOne(
+      newUser
+    );
     console.log(result);
 
     ctx.response.status = 200;
@@ -42,13 +48,14 @@ export const getTest = async (
   next: Koa.Next
 ) => {
   try {
-    const newGame: Game = {
-      name: 'Plants Vs Zombies',
-      price: 420,
-      category: 'RPG',
+    const newService: Service = {
+      date: 0,
+      seats: 450,
     };
 
-    const result = await ctx.state.gameCollection.insertOne(newGame);
+    const result = await ctx.state.mongoState.servicesCollection.insertOne(
+      newService
+    );
     console.log(result);
 
     ctx.response.status = 200;

@@ -1,15 +1,19 @@
 import Koa from 'koa';
-import Router from '@koa/router';
 import * as dotenv from 'dotenv';
 import * as mongoDB from 'mongodb';
 
 // local
 import { connectToDatabase } from './services/database.service';
-import Game from './models/games.model';
-import { gameRouter } from './router/router';
+import User from './models/user.model';
+import { usersRouter } from './router/router';
+import Service from './models/service.model';
 
 export interface MyState {
-  gameCollection: mongoDB.Collection<Game>;
+  mongoState: {
+    mongoClient: mongoDB.MongoClient;
+    usersCollection: mongoDB.Collection<User>;
+    servicesCollection: mongoDB.Collection<Service>;
+  };
 }
 
 (async function main() {
@@ -17,12 +21,12 @@ export interface MyState {
 
   const PORT = process.env.PORT || 4000;
 
-  const gameCollection = await connectToDatabase();
+  const mongoState = await connectToDatabase();
 
   const app = new Koa<MyState>();
 
   app.use(async (ctx, next) => {
-    ctx.state.gameCollection = gameCollection;
+    ctx.state.mongoState = mongoState;
     await next();
   });
 
@@ -33,7 +37,7 @@ export interface MyState {
     console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
   });
 
-  app.use(gameRouter.routes()).use(gameRouter.allowedMethods());
+  app.use(usersRouter.routes()).use(usersRouter.allowedMethods());
 
   app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
 })();
