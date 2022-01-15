@@ -15,13 +15,57 @@ export const connectToDatabase = async (): Promise<{
 
   const db: mongoDB.Db = client.db(process.env.MONGO_DB_NAME);
 
+  // let collections: string[] = [];
+  // db.listCollections().toArray((err, items) => {
+  //   if (items != undefined) {
+  //     items.forEach((i) => {
+  //       console.log(i.name);
+
+  //       collections = [...collections, i.name];
+  //     });
+  //   }
+  // });
+
+  // if (
+  //   collections.includes(
+  //     <string>process.env.USERS_COLLECTION_NAME ||
+  //       <string>process.env.SERVICES_COLLECTION_NAME
+  //   )
+  // ) {
+  //   console.log('collections already made!');
+  // }
+
   const usersCollection: mongoDB.Collection<User> = db.collection(
     process.env.USERS_COLLECTION_NAME || process.exit(1)
   );
 
-  const servicesCollection: mongoDB.Collection<Service> = db.collection(
-    process.env.SERVICES_COLLECTION_NAME || process.exit(1)
-  );
+  // throws error is collection exists... need to check for collections before creation
+  const servicesCollection: mongoDB.Collection<Service> =
+    await db.createCollection(
+      process.env.SERVICES_COLLECTION_NAME || process.exit(1),
+      {
+        validator: {
+          $jsonSchema: {
+            bsonType: 'object',
+            required: ['date', 'seats'],
+            additionalProperties: false,
+            properties: {
+              _id: {},
+              date: {
+                bsonType: 'string',
+                description: "'date' is required and is a string",
+              },
+              seats: {
+                bsonType: 'number',
+                minimum: 0,
+                maximum: 10,
+                description: "'seats' is required and is a number",
+              },
+            },
+          },
+        },
+      }
+    );
 
   console.log(
     `Successfully connected to database: ${db.databaseName} and collection: ${usersCollection.collectionName}`

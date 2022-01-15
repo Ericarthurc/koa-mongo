@@ -35,13 +35,13 @@ export const getTest: KoaHandler = async (ctx, _next) => {
   try {
     const newService: Service = {
       date: 0,
-      seats: 450,
+      seats: 9,
     };
 
     const result = await ctx.state.mongoState.servicesCollection.insertOne(
       newService
     );
-    console.log(result);
+    // console.log(result);
 
     ctx.response.status = 200;
     ctx.response.body = result;
