@@ -1,11 +1,11 @@
-import Koa from 'koa';
-import dotenv from 'dotenv';
+import Koa from "koa";
+import dotenv from "dotenv";
 
 // local
-import { connectToDatabase } from './services/database.service';
-import { usersRouter } from './router/router';
-import { httpStatsMiddleware } from './middleware/stats';
-import { MyKoaState } from './types';
+import { connectToDatabase } from "./services/database.service";
+import { usersRouter } from "./router/router";
+import { httpStatsMiddleware } from "./middleware/stats";
+import { MyKoaState } from "./types";
 
 (async function main() {
   dotenv.config();
