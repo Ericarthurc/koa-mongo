@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
 // local
 import { connectToDatabase } from './services/database.service';

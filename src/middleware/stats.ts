@@ -1,12 +1,8 @@
-import Koa from 'koa';
-import { MyKoaState } from '../types';
+import { KoaMiddleware } from '../types';
 
-export async function httpStatsMiddleware(
-  ctx: Koa.ParameterizedContext<MyKoaState, Koa.DefaultContext, any>,
-  next: Koa.Next
-) {
+export const httpStatsMiddleware: KoaMiddleware = async (ctx, next) => {
   const start = Date.now();
   await next();
   const ms = Date.now() - start;
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
-}
+};

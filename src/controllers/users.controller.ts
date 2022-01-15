@@ -2,7 +2,7 @@ import User from '../models/user.model';
 import Service from '../models/service.model';
 import { KoaHandler } from '../types';
 
-export const getGame: KoaHandler = async (ctx, next) => {
+export const getGame: KoaHandler = async (ctx, _next) => {
   try {
     const newUser: User = {
       name: 'John Doe',
@@ -20,6 +20,7 @@ export const getGame: KoaHandler = async (ctx, next) => {
 
     ctx.response.status = 200;
     ctx.response.body = result;
+    console.log('handler finished!');
   } catch (error) {
     console.log('here');
 
@@ -30,7 +31,7 @@ export const getGame: KoaHandler = async (ctx, next) => {
   }
 };
 
-export const getTest: KoaHandler = async (ctx, next) => {
+export const getTest: KoaHandler = async (ctx, _next) => {
   try {
     const newService: Service = {
       date: 0,

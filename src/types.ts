@@ -5,6 +5,13 @@ import * as mongoDB from 'mongodb';
 import User from './models/user.model';
 import Service from './models/service.model';
 
+type AddParameters<
+  TFunction extends (...args: any) => any,
+  TParameters extends [...args: any]
+> = (
+  ...args: [...Parameters<TFunction>, ...TParameters]
+) => ReturnType<TFunction>;
+
 export interface MyKoaState {
   mongoState: {
     mongoClient: mongoDB.MongoClient;
@@ -22,3 +29,13 @@ export type KoaHandler = (
   >,
   next: Koa.Next
 ) => Promise<void>;
+
+export type KoaMiddleware = (
+  ctx: Koa.ParameterizedContext<MyKoaState, Koa.DefaultContext, any>,
+  next: Koa.Next
+) => Promise<void>;
+
+export type DbMiddlware = AddParameters<
+  KoaMiddleware,
+  [mongoState: MyKoaState['mongoState']]
+>;
