@@ -1,17 +1,8 @@
-import Koa from 'koa';
-import Router from '@koa/router';
-import { MyState } from '../main';
 import User from '../models/user.model';
 import Service from '../models/service.model';
+import { KoaHandler } from '../types';
 
-export const getGame = async (
-  ctx: Koa.ParameterizedContext<
-    MyState,
-    Koa.DefaultContext & Router.RouterParamContext<MyState, Koa.DefaultContext>,
-    any
-  >,
-  next: Koa.Next
-) => {
+export const getGame: KoaHandler = async (ctx, next) => {
   try {
     const newUser: User = {
       name: 'John Doe',
@@ -39,14 +30,7 @@ export const getGame = async (
   }
 };
 
-export const getTest = async (
-  ctx: Koa.ParameterizedContext<
-    MyState,
-    Koa.DefaultContext & Router.RouterParamContext<MyState, Koa.DefaultContext>,
-    any
-  >,
-  next: Koa.Next
-) => {
+export const getTest: KoaHandler = async (ctx, next) => {
   try {
     const newService: Service = {
       date: 0,

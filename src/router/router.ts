@@ -1,8 +1,8 @@
 import Router from '@koa/router';
 import { getGame, getTest } from '../controllers/users.controller';
-import { MyState } from '../main';
+import { MyKoaState } from '../types';
 
-export const usersRouter = new Router<MyState>();
+export const usersRouter = new Router<MyKoaState>();
 usersRouter
   .get('/', getGame)
   .get('/test', getTest)

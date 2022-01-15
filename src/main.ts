@@ -1,20 +1,11 @@
 import Koa from 'koa';
 import * as dotenv from 'dotenv';
-import * as mongoDB from 'mongodb';
 
 // local
 import { connectToDatabase } from './services/database.service';
-import User from './models/user.model';
 import { usersRouter } from './router/router';
-import Service from './models/service.model';
-
-export interface MyState {
-  mongoState: {
-    mongoClient: mongoDB.MongoClient;
-    usersCollection: mongoDB.Collection<User>;
-    servicesCollection: mongoDB.Collection<Service>;
-  };
-}
+import { httpStatsMiddleware } from './middleware/stats';
+import { MyKoaState } from './types';
 
 (async function main() {
   dotenv.config();
@@ -23,19 +14,14 @@ export interface MyState {
 
   const mongoState = await connectToDatabase();
 
-  const app = new Koa<MyState>();
+  const app = new Koa<MyKoaState>();
 
   app.use(async (ctx, next) => {
     ctx.state.mongoState = mongoState;
     await next();
   });
 
-  app.use(async (ctx, next) => {
-    const start = Date.now();
-    await next();
-    const ms = Date.now() - start;
-    console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
-  });
+  app.use(httpStatsMiddleware);
 
   app.use(usersRouter.routes()).use(usersRouter.allowedMethods());
 
