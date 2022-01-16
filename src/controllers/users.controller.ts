@@ -1,56 +1,65 @@
-import User from '../models/user.model';
-import Service from '../models/service.model';
-import { KoaHandler } from '../types';
+import User from "../models/user.model";
+import Service from "../models/service.model";
+import { KoaHandler } from "../types";
+import { ObjectId } from "mongodb";
 
-export const getGame: KoaHandler = async (ctx, _next) => {
+export const getUsersController: KoaHandler = async (ctx, _next) => {
   try {
-    const newUser: User = {
-      name: 'John Doe',
-      email: 'test@gmail.com',
-      serviceDate: '1',
-      serviceId: '1',
-      seats: 0,
-      updaterPin: 0,
-    };
-
-    const result = await ctx.state.mongoState.usersCollection.insertOne(
-      newUser
-    );
-    console.log(result);
+    const users = await ctx.state.mongoState.usersCollection.find({}).toArray();
 
     ctx.response.status = 200;
-    ctx.response.body = result;
-    console.log('handler finished!');
+    ctx.response.body = users;
   } catch (error) {
-    console.log('here');
-
     console.error(error);
 
     ctx.response.status = 500;
-    ctx.response.body = error;
+    ctx.response.body = `${error}`;
   }
 };
 
-export const getTest: KoaHandler = async (ctx, _next) => {
+export const getUserController: KoaHandler = async (ctx, _next) => {
+  const id = ctx.params.id;
   try {
-    const newService: Service = {
-      date: 0,
-      seats: 9,
-    };
+    const query = { _id: new ObjectId(id) };
+    const user = await ctx.state.mongoState.usersCollection.findOne(query);
 
-    const result = await ctx.state.mongoState.servicesCollection.insertOne(
-      newService
-    );
-    // console.log(result);
+    if (!user) {
+      throw new Error("no user found");
+    }
 
     ctx.response.status = 200;
-    ctx.response.body = result;
+    ctx.response.body = user;
   } catch (error) {
-    console.log('here');
+    // console.log("here");
 
-    console.error(error);
+    // console.error(error);
 
     ctx.response.status = 500;
-    ctx.response.body = error;
+    ctx.response.body = `${error}`;
   }
+};
+
+export const createUserController: KoaHandler = async (ctx, _next) => {
+  try {
+  } catch (error) {}
+};
+
+export const emailUserPinController: KoaHandler = async (ctx, _next) => {
+  try {
+  } catch (error) {}
+};
+
+export const updateUserServiceController: KoaHandler = async (ctx, _next) => {
+  try {
+  } catch (error) {}
+};
+
+export const deleteUserController: KoaHandler = async (ctx, _next) => {
+  try {
+  } catch (error) {}
+};
+
+export const deleteUserByPinController: KoaHandler = async (ctx, _next) => {
+  try {
+  } catch (error) {}
 };

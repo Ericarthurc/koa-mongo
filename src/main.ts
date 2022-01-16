@@ -9,7 +9,7 @@ import { usersRouter } from "./router/router";
 import {
   httpStatsMiddleware,
   dbInjectorMiddleware,
-} from "./middleware/handlers.middleware";
+} from "./middleware/services.middleware";
 import { MyKoaState } from "./types";
 
 (async function main() {
@@ -28,7 +28,11 @@ import { MyKoaState } from "./types";
   app.listen(process.env.PORT, () =>
     console.log(
       Chalk.cyanBright.underline.bold(
-        `Server running on port: ${Chalk.greenBright(process.env.PORT)}`
+        `Server running on port: ${Chalk.greenBright(
+          process.env.PORT
+        )}\n${Chalk.magentaBright(
+          `API Version: ${Chalk.greenBright(process.env.API_VERSION)}`
+        )}`
       )
     )
   );
