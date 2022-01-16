@@ -1,5 +1,7 @@
+// packages
 import Koa from "koa";
-import dotenv from "dotenv";
+import Dotenv from "dotenv";
+import Chalk from "chalk";
 
 // local
 import { connectToDatabase } from "./services/database.service";
@@ -9,9 +11,7 @@ import { dbInjectorMiddleware } from "./middleware/dbInjector";
 import { MyKoaState } from "./types";
 
 (async function main() {
-  dotenv.config();
-
-  const PORT = process.env.PORT || 4000;
+  Dotenv.config();
 
   const mongoState = await connectToDatabase();
 
@@ -23,5 +23,11 @@ import { MyKoaState } from "./types";
 
   app.use(usersRouter.routes()).use(usersRouter.allowedMethods());
 
-  app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
+  app.listen(process.env.PORT, () =>
+    console.log(
+      Chalk.cyanBright.underline.bold(
+        `Server running on port: ${Chalk.greenBright(process.env.PORT)}`
+      )
+    )
+  );
 })();

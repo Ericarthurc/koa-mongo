@@ -81,7 +81,9 @@ export const connectToDatabase = async (): Promise<{
   );
 
   console.log(
-    `Successfully connected to database: ${db.databaseName} and collections: ${usersCollection.collectionName}, ${servicesCollection.collectionName}`
+    Chalk.yellowBright.underline.bold(
+      `Successfully connected to database: ${db.databaseName} and collections: ${usersCollection.collectionName}, ${servicesCollection.collectionName}`
+    )
   );
 
   return { mongoClient: client, usersCollection, servicesCollection };
