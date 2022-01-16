@@ -6,8 +6,10 @@ import Chalk from "chalk";
 // local
 import { connectToDatabase } from "./services/database.service";
 import { usersRouter } from "./router/router";
-import { httpStatsMiddleware } from "./middleware/stats";
-import { dbInjectorMiddleware } from "./middleware/dbInjector";
+import {
+  httpStatsMiddleware,
+  dbInjectorMiddleware,
+} from "./middleware/handlers.middleware";
 import { MyKoaState } from "./types";
 
 (async function main() {
