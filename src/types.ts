@@ -1,9 +1,9 @@
-import Koa from 'koa';
-import Router from '@koa/router';
-import * as mongoDB from 'mongodb';
+import Koa from "koa";
+import Router from "@koa/router";
+import * as mongoDB from "mongodb";
 
-import User from './models/user.model';
-import Service from './models/service.model';
+import User from "./models/user.model";
+import Service from "./models/service.model";
 
 type AddParameters<
   TFunction extends (...args: any) => any,
@@ -34,8 +34,3 @@ export type KoaMiddleware = (
   ctx: Koa.ParameterizedContext<MyKoaState, Koa.DefaultContext, any>,
   next: Koa.Next
 ) => Promise<void>;
-
-export type DbMiddlware = AddParameters<
-  KoaMiddleware,
-  [mongoState: MyKoaState['mongoState']]
->;

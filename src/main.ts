@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { connectToDatabase } from "./services/database.service";
 import { usersRouter } from "./router/router";
 import { httpStatsMiddleware } from "./middleware/stats";
+import { dbInjectorMiddleware } from "./middleware/dbInjector";
 import { MyKoaState } from "./types";
 
 (async function main() {
@@ -16,10 +17,7 @@ import { MyKoaState } from "./types";
 
   const app = new Koa<MyKoaState>();
 
-  app.use(async (ctx, next) => {
-    ctx.state.mongoState = mongoState;
-    await next();
-  });
+  app.use(dbInjectorMiddleware(mongoState));
 
   app.use(httpStatsMiddleware);
 
