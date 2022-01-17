@@ -1,7 +1,7 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId } from "mongodb";
 
 export default interface Service {
   id?: ObjectId;
-  date: number;
+  date: Date;
   seats: number;
 }

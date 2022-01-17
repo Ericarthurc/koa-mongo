@@ -59,8 +59,8 @@ export const connectToDatabase = async (): Promise<{
           properties: {
             _id: {},
             date: {
-              bsonType: "string",
-              description: "'date' is required and is a string",
+              bsonType: "date",
+              description: "'date' is required and is a date object",
             },
             seats: {
               bsonType: "number",
@@ -77,7 +77,41 @@ export const connectToDatabase = async (): Promise<{
   const usersCollection = await collectionCreator<User>(
     db,
     collectionList,
-    <string>process.env.USERS_COLLECTION_NAME
+    <string>process.env.USERS_COLLECTION_NAME,
+    {
+      validator: {
+        $jsonSchema: {
+          bsonType: "object",
+          required: ["name", "email", "serviceId", "seats", "updaterPin"],
+          additionalProperties: false,
+          properties: {
+            _id: {},
+            name: {
+              bsonType: "string",
+              description: "'name' is required and is a number",
+            },
+            email: {
+              bsonType: "string",
+              description: "'email' is required and is a number",
+            },
+            serviceId: {
+              bsonType: "objectId",
+              description: "'serviceId' is required and is an ObjectId",
+            },
+            seats: {
+              bsonType: "number",
+              minimum: 0,
+              maximum: 10,
+              description: "'seats' is required and is a number",
+            },
+            updaterPin: {
+              bsonType: "string",
+              description: "'updaterPin' is required and is a string",
+            },
+          },
+        },
+      },
+    }
   );
 
   console.log(
@@ -85,6 +119,11 @@ export const connectToDatabase = async (): Promise<{
       `Successfully connected to database: ${db.databaseName} and collections: ${usersCollection.collectionName}, ${servicesCollection.collectionName}`
     )
   );
+
+  usersCollection.createIndexes([
+    { name: "email", key: { email: 1 }, unique: true },
+    { name: "updaterPin", key: { updaterPin: 1 }, unique: true },
+  ]);
 
   return { mongoClient: client, usersCollection, servicesCollection };
 };
